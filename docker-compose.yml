@@ -1,0 +1,62 @@
+version: '3'
+
+networks:
+  tick-stack:
+
+services:
+  telegraf:
+    image: arm32v7/telegraf:latest
+    volumes:
+      - ./etc/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    networks:
+      - tick-stack
+    ports:
+      - 8092:8092/udp
+      - 8094:8094
+      - 8125:8125/udp
+    depends_on:
+      - influxdb
+  chronograf:
+    image: arm32v7/chronograf:latest
+    networks:
+      - tick-stack
+    ports:
+      - 8888:8888
+    depends_on:
+      - influxdb
+  kapacitor:
+    image: arm32v7/kapacitor:latest
+    environment:
+      KAPACITOR_HOSTNAME: kapacitor
+      KAPACITOR_INFLUXDB_0_URLS_0: http://influxdb:8086
+    networks:
+      - tick-stack
+    ports:
+      - 9092:9092
+    depends_on:
+      - influxdb
+  influxdb:
+    image: arm32v7/influxdb:latest
+    volumes:
+      - ./data/influxdb:/var/lib/influxdb
+    networks:
+      - tick-stack
+    ports:
+      - 8086:8086
+  influxdb-cli:
+    image: influxdb:latest
+    entrypoint:
+      - influx
+      - -host
+      - influxdb
+    networks:
+      - tick-stack
+    depends_on:
+      - influxdb
+  kapacitor-cli:
+    image: kapacitor:latest
+    entrypoint: bash
+    environment:
+      KAPACITOR_URL: http://kapacitor:9092
+    depends_on:
+      - kapacitor
