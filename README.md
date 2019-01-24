@@ -1,6 +1,6 @@
 # TICK Stack for ARM Devices
 
-Run the InfluxData TICK stack for ARM devices, such as Raspberry Pi 3.
+Run the InfluxData [TICK stack](https://www.influxdata.com/time-series-platform/) for ARM devices, such as Raspberry Pi 3.
 
 ## Prerequisites
 
