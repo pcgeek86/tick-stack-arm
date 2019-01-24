@@ -32,3 +32,14 @@ Creating tick-stack-arm_kapacitor-cli_1 ... done
 ```
 
 Once the stack is up and running, you can access the Chronograf web interface at `http://<pi>:8888`. Complete the setup process, using the container names as the DNS endpoints for InfluxDB (http://influxdb:8086) and Kapacitor (http://kapacitor:9092).
+
+## Removal
+
+If you want to destroy the Docker containers and networks associated with the TICK stack:
+
+```bash
+cd ~/tick-stack-arm
+docker-compose down
+```
+
+**NOTE**: The InfluxDB container will leave behind an additional `./data` directory, containing its application state. You can remove this if you'd like to reset the environment.
